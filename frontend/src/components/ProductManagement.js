@@ -165,6 +165,7 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
                 <button onClick={() => handleEditProduct(product)}>Edit</button>
                 <button onClick={() => handleSellProduct(product.id)}>Sell</button>
                 <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+              
               </td>
             </tr>
           ))}
