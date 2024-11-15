@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('background.jpg');
+    background-color: white;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -13,7 +13,7 @@ body {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background: white;
+    background: peachpuff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -69,14 +69,15 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #db7878;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
+
 .product-form button:hover {
-    background-color: #0056b3;
+    background-color: #8f6767;
 }
 
 /* Navigation Styles */
@@ -93,7 +94,7 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: #007bff;
+    color: #db7878;
 }
 
 nav a:hover {
@@ -103,7 +104,7 @@ nav a:hover {
 .active {
     font-weight: bold;
     text-decoration: underline;
-    color: #0056b3;
+    color: #db7878;
 }
 
 /* Table Styles */
@@ -300,14 +301,14 @@ nav a:hover {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #db7878;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .user-form button:hover {
-    background-color: #0056b3;
+    background-color: #db7878;
 }
 
 /* User Table Styles */
@@ -324,7 +325,7 @@ nav a:hover {
 }
 
 .user-table th {
-    background-color: #007bff;
+    background-color: #db7878;
     color: white;
 }
 
@@ -367,3 +368,22 @@ nav a:hover {
         padding: 8px;
     }
 }
+/* Dashboard.css */
+@keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .rotating-image {
+    animation: rotate 5s linear infinite; 
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .rotating-image:hover {
+    animation: rotate 2s linear infinite;
+  }
+  

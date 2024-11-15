@@ -1,9 +1,7 @@
 // src/components/UserManagement.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Style.css';
-
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -19,8 +17,9 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users');
-      setUsers(response.data);
+      const response = await fetch('http://localhost:5000/api/users');
+      const data = await response.json();
+      setUsers(data);
     } catch (error) {
       setError('Error fetching users');
     }
@@ -35,7 +34,13 @@ const UserManagement = () => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/signup', newUser);
+      await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
       setNewUser({ username: '', password: '' });
       fetchUsers();
     } catch (error) {
@@ -53,7 +58,13 @@ const UserManagement = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/users/${editingUser.id}`, newUser);
+      await fetch(`http://localhost:5000/api/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
       setEditingUser(null);
       setNewUser({ username: '', password: '' });
       fetchUsers();
@@ -65,7 +76,9 @@ const UserManagement = () => {
   // Delete user
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await fetch(`http://localhost:5000/api/users/${id}`, {
+        method: 'DELETE',
+      });
       fetchUsers();
     } catch (error) {
       setError('Error deleting user');
@@ -74,7 +87,6 @@ const UserManagement = () => {
 
   // Handle logout
   const handleLogout = () => {
-    // Clear any authentication tokens or session data if needed
     navigate('/login');
   };
 
@@ -86,11 +98,9 @@ const UserManagement = () => {
           <ul>
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/products">Product Management</Link></li>
-            
           </ul>
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </nav>
-        
       </header>
   
       {error && <p className="error">{error}</p>}
@@ -138,7 +148,6 @@ const UserManagement = () => {
       </table>
     
     </div>
-    
   );
 };
 

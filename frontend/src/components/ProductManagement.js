@@ -1,7 +1,6 @@
 // src/components/ProductManagement.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Style.css';
 
 const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
@@ -22,9 +21,10 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products');
-      setLocalProducts(response.data);
-      setProducts(response.data); // Update shared products state
+      const response = await fetch('http://localhost:5000/api/products');
+      const data = await response.json();
+      setLocalProducts(data);
+      setProducts(data); // Update shared products state
     } catch (err) {
       console.error('Error fetching products:', err);
     }
@@ -37,14 +37,22 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      if (editingProduct) {
-        await axios.put(`http://localhost:5000/api/products/${editingProduct.id}`, newProduct);
-        setEditingProduct(null);
-      } else {
-        await axios.post('http://localhost:5000/api/products', newProduct);
-      }
+      const method = editingProduct ? 'PUT' : 'POST';
+      const url = editingProduct 
+        ? `http://localhost:5000/api/products/${editingProduct.id}` 
+        : 'http://localhost:5000/api/products';
+
+      await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+      });
+
       fetchProducts();
       setNewProduct({ name: '', description: '', price: '', quantity: '' });
+      setEditingProduct(null);
       setError('');
     } catch (err) {
       console.error('Error adding/updating product:', err);
@@ -62,9 +70,12 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
     if (product && product.quantity > 0) {
       const updatedQuantity = product.quantity - 1;
       try {
-        await axios.put(`http://localhost:5000/api/products/${id}`, {
-          ...product,
-          quantity: updatedQuantity,
+        await fetch(`http://localhost:5000/api/products/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...product, quantity: updatedQuantity }),
         });
         fetchProducts();
       } catch (err) {
@@ -78,7 +89,9 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
 
   const handleDeleteProduct = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await fetch(`http://localhost:5000/api/products/${id}`, {
+        method: 'DELETE',
+      });
       fetchProducts();
     } catch (err) {
       console.error('Error deleting product:', err);
@@ -93,12 +106,11 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
   return (
     <div className="container">
        <h1>WINGS CAFE </h1>
-    <div className="product-management">
+       <div className="product-management">
       <header className="header">
         <nav className="navigation">
           <ul>
             <li><Link to="/dashboard">Dashboard</Link></li>
-            
             <li><Link to="/users">User Management</Link></li>
           </ul>
           <button onClick={handleLogout} className="logout-button">Logout</button>
@@ -165,7 +177,6 @@ const ProductManagement = ({ setProducts }) => { // Receive setProducts from App
                 <button onClick={() => handleEditProduct(product)}>Edit</button>
                 <button onClick={() => handleSellProduct(product.id)}>Sell</button>
                 <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
-              
               </td>
             </tr>
           ))}
